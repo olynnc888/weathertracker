@@ -128,10 +128,9 @@ $(document).ready(function () {
                     $("#forcast .row").append(columnall);
                 }
             }
-        });
-    }
-
-});
+          );
+        }
+    });
 
 
 
