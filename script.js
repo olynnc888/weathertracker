@@ -9,10 +9,11 @@ $(document).ready(function () {
         wForcast(inputsearch);
     });
 
-        //enter key function for searchbtn
+    //enter key function for searchbtn
     $("#searchbtn").keypress(function (event) {
         var kc = (event.keyCode ? event.keyCode : event.which);
         if (kc === 13) {
+            var inputsearch = $("#searchval").val();
             wFunction(inputsearch);
             wForcast(inputsearch);  
         }
@@ -21,10 +22,11 @@ $(document).ready(function () {
     //store and show previous searches
     var localhistory = JSON.parse(localStorage.getItem("localhistory")) || [];
 
-        //sets localhistory array to needed length
+    //sets localhistory array to needed length
     if (localhistory.length > 0) {
         wFunction(localhistory[localhistory.length - 1]);
     }
+
     //shows history items in rows
     for (var i = 0; i < localhistory.length; i++) {
         createRow(localhistory[i]);
@@ -38,8 +40,9 @@ $(document).ready(function () {
 
     //lists items once click funtion is initiated
     $(".history").on("click", "li", function () {
-        wFunction($(this).text());
-        wForecast($(this).text());
+        var inputsearch = $(this).text();
+        wFunction(inputsearch);
+        wForecast(inputsearch);
     });
 
     function wFunction(inputsearch) {
@@ -49,38 +52,35 @@ $(document).ready(function () {
 
         }).then(function (data) {
             if (localhistory.indexOf(inputsearch) === -1) {
-                history.push(inputsearch);
-                localStorage.setItem("history", JSON.stringify(localhistory));
+                localhistory.push(inputsearch);
+                localStorage.setItem("localhistory", JSON.stringify(localhistory));
                 createRow(inputsearch);
             }
-                //clearing content
-            $("today").empty();
+            //clearing content
+            $("#today").empty();
 
             var title = $("<h3>").addClass("title-card").text(data.name + " (" + new Date().toLocaleDateString() + ")");
             var image = $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
 
             var card = $("<div>").addClass("card");
-            var cbody = $("<div>").addClass("cardbody");
-            var wind = $("<p>").addClass("card-txt").text("Wind Speed: " + data.wspeed + " MPH");
+            var cbody = $("<div>").addClass("card-body");
+            var wind = $("<p>").addClass("card-txt").text("Wind Speed: " + data.wind.speed + " MPH");
             var humidity = $("<p>").addClass("card-txt").text("Humidity: " + data.main.humidity + " %");
-            var temp = $("<p>").addClass("card-txt").text("Temperature: " + data.amin.temp + " K");
-            console.log(data)
-            var longitude = data.coord.longitude;
-            var latitude = data.coord.latitude;
+            var temp = $("<p>").addClass("card-txt").text("Temperature: " + data.main.temp + " K");
+            var longitude = data.coord.lon;
+            var latitude = data.coord.lat;
 
             $.ajax({
                 type: "GET",
-                url: "https://api.openweathermap.org/data/2.5/uvi?appid=9f112416334ce37769e5c8683b218a0d&lat=" + latitude + "&longitude=" + longitude,
+                url: "https://api.openweathermap.org/data/2.5/uvi?appid=9f112416334ce37769e5c8683b218a0d&lat=" + latitude + "&lon=" + longitude,
 
             }).then(function (response) {
-                console.log(response);
 
-                var uv;
                 var uvrep = response.value;
                 var uvindx = $("<p>").addClass("card-txt").text("UV Index: ");
                 var btn = $("<span>").addClass("btn btn-sm").text(uvrep);
                     
-                if (uvrep < 3) {
+                if (uvrep < 3)
                     btn.addClass("successbtn");
                 } else if (uvrep < 7) {
                     btn.addClass("warningbtn");
@@ -88,10 +88,10 @@ $(document).ready(function () {
                     btn.addClass("dangerbtn");
                 }
 
-                    cbody.append(uvindx);
-                    $("#today .cbody").append(uvindx.append(btn));
+                cbody.append(uvindx);
+                $("#today .cbody").append(uvindx.append(btn));
                     
-                });
+            });
 
                 //add to page after merge
                 title.append(image);
@@ -99,8 +99,8 @@ $(document).ready(function () {
                 card.append(cbody);
                 $("#today").append(card);
                 console.log(data);
-                });
-            }
+            });
+        }
         // Forcast function using the search function
         function wforcast(inputsearch) {
             $.ajax({
