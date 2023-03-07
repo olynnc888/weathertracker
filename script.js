@@ -80,7 +80,7 @@ $(document).ready(function () {
                 var uvindx = $("<p>").addClass("card-txt").text("UV Index: ");
                 var btn = $("<span>").addClass("btn btn-sm").text(uvrep);
                     
-                if (uvrep < 3)
+                if (uvrep < 3) {
                     btn.addClass("successbtn");
                 } else if (uvrep < 7) {
                     btn.addClass("warningbtn");
@@ -120,7 +120,7 @@ $(document).ready(function () {
                     var columnall = $("<div>").addClass("col-md-2.5");
                     var cardall = $("<div>").addClass("card bg-dark text-white");
                     var bodyall = $("<div>").addClass("card-body p-2");
-                    var humidall = $("<p>").addClass("card-text").text("Humidity: "data.list[i]main.humidity + "%");
+                    var humidall = $("<p>").addClass("card-text").text("Humidity: " + data.list[i].main.humidity + "%");
                     var tempall = $("<p>").addClass("card-text").text("Temperature: " + data.list[i].main.temp + " °F");
 
                     //show on page
