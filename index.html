@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/c2a39c07b2.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="stylel.css">
+        <title>Weather Tracker</title>
+</head>
+
+<body>
+    <header class="container-fluid text-center text-blue bg-light p-3">
+        <h1>Weather Tracker</h1>
+    </header>
+
+    <div class="fluidcontainer">
+        <div class="row">
+            <aside class="col-lg-2 bg-light">
+                <h3 class="mt1">City Search</h3>
+                <div class="formi formgroup">
+                    <input class="formctrl" type="text" id="searchval"/>
+                    <button class="btn primarybtn" id="searchbtn"> <i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+                </div>
+
+                <ul class="localhistory history"></ul>
+            </aside>
+            <div class="col-lg-8">
+                <div id="today" class="mt-3"></div>
+                <div id="wforcast" class="card-desk mt-3"></div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,9 @@
+h1 {
+    margin-bottom: 0%;
+    background-image: -o-linear-gradient(to left, blue, green, red);
+}
+
+#fc {
+    position: absolute;
+    left: -3%;
+}
