@@ -6,7 +6,7 @@ $(document).ready(function () {
         //if searchval is empty
         $("#searchval").val("");
         wFunction(inputsearch);
-        wForcast(inputsearch);
+        wForecast(inputsearch);
     });
 
     //enter key function for searchbtn
@@ -15,7 +15,7 @@ $(document).ready(function () {
         if (kc === 13) {
             var inputsearch = $("#searchval").val();
             wFunction(inputsearch);
-            wForcast(inputsearch);  
+            wForecast(inputsearch);  
         }
     });
 
@@ -104,7 +104,7 @@ $(document).ready(function () {
             });
         }
         // Forcast function using the search function
-        function wForcast(inputsearch) {
+        function wForecast(inputsearch) {
             $.ajax({
                 type: "GET",
                 url: "https://api.openweathermap.org/data/2.5/forecast?q=" + inputsearch + "&appid=9f112416334ce37769e5c8683b218a0d&units=imperial",
