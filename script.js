@@ -66,7 +66,9 @@ $(document).ready(function () {
             var cbody = $("<div>").addClass("card-body");
             var wind = $("<p>").addClass("card-txt").text("Wind Speed: " + data.wind.speed + " MPH");
             var humidity = $("<p>").addClass("card-txt").text("Humidity: " + data.main.humidity + " %");
-            var temp = $("<p>").addClass("card-txt").text("Temperature: " + data.main.temp + " K");
+            var celsiusTemp = data.main.temp - 273.15;
+            var fahrenheitTemp = (celsiusTemp * 1.8) + 32;
+            var temp = $("<p>").addClass("card-txt").text("Temperature: " + fahrenheitTemp.toFixed(1) + " °F");
             var longitude = data.coord.lon;
             var latitude = data.coord.lat;
 
@@ -102,7 +104,7 @@ $(document).ready(function () {
             });
         }
         // Forcast function using the search function
-        function wforcast(inputsearch) {
+        function wForcast(inputsearch) {
             $.ajax({
                 type: "GET",
                 url: "https://api.openweathermap.org/data/2.5/forecast?q=" + inputsearch + "&ppid=9f112416334ce37769e5c8683b218a0d&units=imperial",
