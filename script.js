@@ -107,7 +107,7 @@ $(document).ready(function () {
         function wForcast(inputsearch) {
             $.ajax({
                 type: "GET",
-                url: "https://api.openweathermap.org/data/2.5/forecast?q=" + inputsearch + "&ppid=9f112416334ce37769e5c8683b218a0d&units=imperial",
+                url: "https://api.openweathermap.org/data/2.5/forecast?q=" + inputsearch + "&appid=9f112416334ce37769e5c8683b218a0d&units=imperial",
 
             }).then(function (data) {
                 console.log(data);
