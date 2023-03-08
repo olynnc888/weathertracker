@@ -106,33 +106,40 @@ $(document).ready(function () {
         // Forcast function using the search function
         function wForecast(inputsearch) {
             $.ajax({
-                type: "GET",
-                url: "https://api.openweathermap.org/data/2.5/forecast?q=" + inputsearch + "&appid=9f112416334ce37769e5c8683b218a0d&units=imperial",
-
+              type: "GET",
+              url: "https://api.openweathermap.org/data/2.5/forecast?q=" + inputsearch + "&appid=9f112416334ce37769e5c8683b218a0d&units=imperial",
             }).then(function (data) {
-                console.log(data);
-                $("#forecast").html("<h4 class=\"mt-3\">5-Day Forcast:</h3>").append("<div class=\"row\">");
-
-                //new card creation function
-
-                for (var i = 0; i < data.list.length; i++) {
-
-                    var titleall = $("<h3>").addClass("title-card").text(new Date(data.list[i].dt_txt).toLocaleDateString());
-                    var imgall = $("<img>").attr("src", "http://openweathermap.org/img/w/" + data.list[i].weather[0].icon + ".png");
-                    var columnall = $("<div>").addClass("col-md-2.5");
-                    var cardall = $("<div>").addClass("card bg-dark text-white");
-                    var bodyall = $("<div>").addClass("card-body p-2");
-                    var humidall = $("<p>").addClass("card-text").text("Humidity: " + data.list[i].main.humidity + "%");
-                    var tempall = $("<p>").addClass("card-text").text("Temperature: " + data.list[i].main.temp + " °F");
-
-                    //show on page
-                    columnall.append(cardall.append(bodyall.append(titleall, imgall, tempall, humidall)));
-                    $("#forcast .row").append(columnall);
-                }
-            }
-          );
+              console.log(data);
+              $("#forecast").html("<h4 class=\"mt-3\">5-Day Forecast:</h4>").append("<div class=\"row\">");
+          
+              // Loop through the forecast data and create a card for each day
+              for (var i = 0; i < data.list.length; i += 8) {
+                var dayData = data.list[i];
+          
+                var date = new Date(dayData.dt_txt).toLocaleDateString();
+                var iconUrl = "http://openweathermap.org/img/w/" + dayData.weather[0].icon + ".png";
+                var temp = dayData.main.temp;
+                var humidity = dayData.main.humidity;
+          
+                var cardCol = $("<div>").addClass("col-md-2.5");
+                var card = $("<div>").addClass("card bg-dark text-white");
+                var cardBody = $("<div>").addClass("card-body p-2");
+          
+                cardBody.append(
+                  $("<h5>").addClass("card-title").text(date),
+                  $("<img>").attr("src", iconUrl),
+                  $("<p>").addClass("card-text").text("Temp: " + temp + "°F"),
+                  $("<p>").addClass("card-text").text("Humidity: " + humidity + "%")
+                );
+          
+                card.append(cardBody);
+                cardCol.append(card);
+                $("#forecast .row").append(cardCol);
+              }
+            });
+          }
         }
-    });
+    );
 
 
 
