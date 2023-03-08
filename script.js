@@ -134,7 +134,7 @@ $(document).ready(function () {
           
                 card.append(cardBody);
                 cardCol.append(card);
-                $("#forecast .row").append(cardCol);
+                $("wforcast").append(cardCol);
               }
             });
           }
