@@ -1,67 +1,83 @@
 $(document).ready(function () {
-    //search button
-    const searchBtn = document.querySelector("#searchbtn");
-    const searchVal = document.querySelector("#searchval");
+  //search button
+  const searchBtn = document.querySelector("#searchbtn");
+  const searchVal = document.querySelector("#searchval");
 
-    searchBtn.addEventListener("click", () => {
-        const inputSearch = searchVal.value;
-        searchVal.value = "";
-        wFunction(inputSearch);
+  searchBtn.addEventListener("click", () => {
+    const inputSearch = searchVal.value;
+    searchVal.value = "";
+    wFunction(inputSearch);
+    wForecast(inputSearch);
+  });
+
+  //enter key function for searchbtn
+  searchVal.addEventListener("keypress", (event) => {
+    const kc = event.keyCode ? event.keyCode : event.which;
+    if (kc === 13) {
+      const inputSearch = searchVal.value;
+      searchVal.value = "";
+      wFunction(inputSearch);
+      wForecast(inputSearch);
+    }
+  });
+  
+  function wFunction(inputSearch) {
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${inputSearch}&appid=9f112416334ce37769e5c8683b218a0d`)
+      .then(response => response.json())
+      .then(data => {
+        const { name, weather, wind, main, coord } = data;
+        const title = `<h3 class="title-card">${name} (${new Date().toLocaleDateString()})</h3>`;
+        const image = `<img src="https://openweathermap.org/img/w/${weather[0].icon}.png" />`;
+
+        const celsiusTemp = main.temp - 273.15;
+        const fahrenheitTemp = (celsiusTemp * 1.8) + 32;
+        const temp = `<p class="card-txt">Temperature: ${fahrenheitTemp.toFixed(1)} °F</p>`;
+        const windSpeed = `<p class="card-txt">Wind Speed: ${wind.speed} MPH</p>`;
+        const humidity = `<p class="card-txt">Humidity: ${main.humidity} %</p>`;
+        
+        const card = $('<div>').addClass('card');
+        const cbody = $('<div>').addClass('card-body');
+        
+        cbody.append(temp, windSpeed, humidity);
+
+        $.ajax({
+          type: 'GET',
+          url: `https://api.openweathermap.org/data/2.5/uvi?appid=9f112416334ce37769e5c8683b218a0d&lat=${coord.lat}&lon=${coord.lon}`
+        }).then(response => {
+          const uvrep = response.value;
+          const uvindx = `<p class="card-txt">UV Index: <span class="btn btn-sm">${uvrep}</span></p>`;
+      
+          if (uvrep < 3) {
+              $(uvindx).find('span').addClass('successbtn');
+          } else if (uvrep < 7) {
+              $(uvindx).find('span').addClass('warningbtn');
+          } else {
+              $(uvindx).find('span').addClass('dangerbtn');
+          }
+      
+          cbody.append(uvindx);
+        });
+        
+        card.append(title, image, cbody);
+        $('#today').empty().append(card);
+        
+        // save search to local storage
+        let localhistory = [];
+
+        if (localStorage.getItem("localhistory")) {
+          localhistory = JSON.parse(localStorage.getItem("localhistory"));
+        }
+        
+        if (localhistory.indexOf(inputSearch) === -1) {
+          localhistory.push(inputSearch);
+          localStorage.setItem("localhistory", JSON.stringify(localhistory));
+          createRow(inputSearch);
+        }
+
+        // get forecast data
         wForecast(inputSearch);
-    });
-
-    //enter key function for searchbtn
-    searchVal.addEventListener("keypress", (event) => {
-        const kc = event.keyCode ? event.keyCode : event.which;
-        if (kc === 13) {
-          const inputSearch = searchVal.value;
-          searchVal.value = "";
-          wFunction(inputSearch);
-          wForecast(inputSearch);
-        }
-      });
-    // store and show previous seraches
-      let localhistory = [];
-
-      if (localStorage.getItem("localhistory")) {
-        localhistory = JSON.parse(localStorage.getItem("localhistory"));
-      }
-      
-      if (localhistory.length > 0) {
-        wFunction(localhistory[localhistory.length - 1]);
-      }
-      
-      function createRow(text) {
-        const listItem = document.createElement("li");
-        listItem.classList.add("list-item");
-        listItem.textContent = text;
-        document.querySelector(".history").prepend(listItem);
-      }
-      
-      localhistory.forEach((search) => {
-        createRow(search);
-      });
-      
-      document.querySelector(".history").addEventListener("click", (event) => {
-        if (event.target.matches("li")) {
-          const inputSearch = event.target.textContent;
-          wFunction(inputSearch);
-          wForecast(inputSearch);
-        }
-      });
-
-    function wFunction(inputSearch) {
-        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${inputSearch}&appid=9f112416334ce37769e5c8683b218a0d`)
-          .then(response => response.json())
-          .then(data => {
-            if (localhistory.indexOf(inputSearch) === -1) {
-              localhistory.push(inputSearch);
-              localStorage.setItem("localhistory", JSON.stringify(localhistory));
-              createRow(inputSearch);
-            }
-            // rest of your code here
-          })
-          .catch(error => console.log(error));
+      })
+      .catch(error => console.log(error));
     }
 
     const { name, weather, wind, main, coord } = data;
